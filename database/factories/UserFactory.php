@@ -2,9 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Enum\AccountStatusEnum;
+use App\Enum\UserRoleEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\User;
+use UserType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -20,7 +23,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            'rmail' => $this->faker->unique()->safeEmail,
+            'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'),
             'phoneNumber' => $this->faker->unique()->phoneNumber,
             'role' => $this->faker->randomElement(['طالب', 'صاحب سكن']),
@@ -33,8 +36,8 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'Type' => 'Student',
-                'AccountStatus' => 'Active',
+                'role' => UserRoleEnum::STUDENT,
+                'accountStatus' => AccountStatusEnum::active,
             ];
         });
     }
@@ -43,8 +46,8 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'Type' => 'HouseOwner',
-                'AccountStatus' => $this->faker->randomElement(['Active', 'Not_Active']),
+                'role' => UserRoleEnum::OWNER,
+                'accountStatus' => $this->faker->randomElement(['active', 'Not_Active']),
             ];
         });
     }

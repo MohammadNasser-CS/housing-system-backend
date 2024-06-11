@@ -22,7 +22,7 @@ class UserSeder extends Seeder
             'password' => Hash::make('12345678'),
             'phoneNumber' => '0527889051',
             'gender' => 'ذكر',
-            'role' => 'Admin',
+            'role' => 'أدمن',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -16,12 +16,12 @@ class ReservationSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::where('Type', 'Student')->get();
+        $users = User::where('role', 'طالب')->get();
         $rooms = Room::all();
 
         $users->each(function ($user) use ($rooms) {
             $room = $rooms->random();
-            Reservation::factory()->create(['UserId' => $user->id, 'RoomId' => $room->id]);
+            Reservation::factory()->create(['userId' => $user->id, 'roomId' => $room->id]);
         });
     }
 }

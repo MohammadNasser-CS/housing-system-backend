@@ -10,42 +10,42 @@ use App\Models\User;
 
 class MyInformationController extends Controller
 {
-    public function ShowMyInformation()
+    public function showMyInformation()
     {
         $user = Auth::user();
         if ($user) {
-            $Name = $user->Name;
-            $Phone = $user->Phone;
-            $Email = $user->Email;
+            $name = $user->name;
+            $phoneNumber = $user->phoneNumber;
+            $email = $user->email;
             return response()->json(
                 [
-                    'Name' => $Name,
-                    'Phone' => $Phone,
-                    'Email' => $Email,
+                    'name' => $name,
+                    'phoneNumber' => $phoneNumber,
+                    'email' => $email,
                 ],
                 200,
             );
         }
     }
-    public function UpdateMyInformation(UpdateUserInformationRequest $request)
+    public function updateMyInformation(UpdateUserInformationRequest $request)
     {
         $user = Auth::user();
         // The Old Information for User :
-        $oldName = $user->Name;
-        $oldPhone = $user->Phone;
-        $oldEmail = $user->Email;
+        $oldName = $user->name;
+        $oldPhone = $user->phoneNumber;
+        $oldEmail = $user->email;
         // The New Information for User (get from Request if Changed) :
-        $newName = $request->input('Name');
-        $newPhone = $request->input('Phone');
-        $newEmail = $request->input('Email');
+        $newName = $request->input('name');
+        $newPhone = $request->input('phoneNumber');
+        $newEmail = $request->input('email');
 
         if($newEmail === $oldEmail && $newName === $oldName && $newPhone == $oldPhone){
             return response()->json(['message' => 'لم تقم أي تحديث جديد'], 422);
         }
 
         // Check The Email or Phone is Exist or not from Another User
-        $ExistingPhone = User::where('Phone', $newPhone)->where('id', '!=', $user->id)->first();
-        $ExistingEmail = User::where('Email', $newEmail)->where('id', '!=', $user->id)->first();
+        $ExistingPhone = User::where('phoneNumber', $newPhone)->where('id', '!=', $user->id)->first();
+        $ExistingEmail = User::where('email', $newEmail)->where('id', '!=', $user->id)->first();
         if ($ExistingPhone) {
             return response()->json(['message' => 'رقم الهاتف مستخدم '], 422);
         }
@@ -54,9 +54,9 @@ class MyInformationController extends Controller
         }
 
         // Check if Has Change :
-        $user->Name = $newName ?? $oldName;
-        $user->Phone = $newPhone ?? $oldPhone;
-        $user->Email = $newEmail ?? $oldEmail;
+        $user->name = $newName ?? $oldName;
+        $user->phoneNumber = $newPhone ?? $oldPhone;
+        $user->email = $newEmail ?? $oldEmail;
         $user->save();
         return response()->json(['message' => 'تم تحديث المعلومات بنجاح'], 200);
     }

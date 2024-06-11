@@ -14,11 +14,11 @@ class HouseOwnerSeeder extends Seeder
      */
     public function run(): void
     {
-        $houseOwners = User::where('Type', 'HouseOwner')->get();
+        $houseOwners = User::where('role', 'صاحب سكن')->get();
 
         // إنشاء سجلات مالكي المنازل المرتبطة
         $houseOwners->each(function ($houseOwner) {
-            HouseOwner::factory()->create(['UserId' => $houseOwner->id]);
+            HouseOwner::factory()->create(['userId' => $houseOwner->id]);
         });
     }
 }

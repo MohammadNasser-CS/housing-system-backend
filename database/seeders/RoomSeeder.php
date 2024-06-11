@@ -17,7 +17,7 @@ class RoomSeeder extends Seeder
         $houses = House::all();
 
         $houses->each(function ($house) {
-            Room::factory()->count(5)->create(['HouseId' => $house->id]);
+            Room::factory()->count(5)->create(['houseId' => $house->id]);
         });
     }
 }

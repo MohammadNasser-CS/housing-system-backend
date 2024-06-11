@@ -2,7 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\CollegesEnum;
+use App\Enum\SpecializationsEnum;
+use App\Enum\UniversityBuildingsEnum;
+use App\Enum\UserGenderEnum;
+use App\Enum\UserRoleEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use SNMP;
 
 class RegisterRequestStudent extends FormRequest
 {
@@ -22,15 +29,16 @@ class RegisterRequestStudent extends FormRequest
     public function rules(): array
     {
         return [
-            'Name' => 'required|string|max:255',
-            'Password' => 'required|string|min:8',
-            'Email' => 'required|string|email|max:255|unique:users',
-            'Phone' => 'required|string|max:255|unique:users',
-            'Gender' => 'required|string|max:255',
-            'College' => 'required|string|max:255',
-            'Specialization' => 'required|string|max:255',
-            'UniversityBuilding' => 'required|string|max:255',
-            'DateOfBirth' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phoneNumber' => 'required|string|max:255|unique:users',
+            'gender' => ['required',Rule::in(array_values(UserGenderEnum::MAP))],
+            'role' => ['required', Rule::in(array_values(UserRoleEnum::MAP))],
+            'college' => ['required',Rule::in(array_values(CollegesEnum::MAP))],
+            'specialization' => ['required',Rule::in(array_values(SpecializationsEnum::MAP))],
+            'universityBuilding' => ['required',Rule::in(array_values(UniversityBuildingsEnum::MAP))],
+            'birthDate' => 'required|string|max:255',
         ];
     }
     public function messages()

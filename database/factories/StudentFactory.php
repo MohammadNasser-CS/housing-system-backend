@@ -21,11 +21,11 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'UserId' => User::factory()->student(),
-            'College' => $this->faker->word,
-            'Specialization' => $this->faker->word,
-            'UniversityBuilding' => $this->faker->word,
-            'DateOfBirth' => $this->faker->date,
+            'userId' => User::factory()->student(),
+            'college' => $this->faker->word,
+            'specialization' => $this->faker->word,
+            'universityBuilding' => $this->faker->word,
+            'birthDate' => $this->faker->date,
             'created_at' => now(),
             'updated_at' => now(),
         ];

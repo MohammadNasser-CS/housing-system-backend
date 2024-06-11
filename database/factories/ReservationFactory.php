@@ -16,11 +16,11 @@ class ReservationFactory extends Factory
     public function definition()
     {
         return [
-            'UserId' => User::factory(),
-            'RoomId' => Room::factory(),
-            'ReservationDate' => $this->faker->date,
-            'ReservationEnd' => $this->faker->date,
-            'ReservationType' => $this->faker->randomElement(['غرفة', 'تخت']),
+            'userId' => User::factory(),
+            'roomId' => Room::factory(),
+            'reservationDate' => $this->faker->date,
+            'reservationEnd' => $this->faker->date,
+            'reservationType' => $this->faker->randomElement(['غرفة', 'تخت']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

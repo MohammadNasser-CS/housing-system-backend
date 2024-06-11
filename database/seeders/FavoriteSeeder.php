@@ -15,12 +15,12 @@ class FavoriteSeeder extends Seeder
      */
     public function run(): void
     {
-        $students = User::where('Type', 'Student')->get();
+        $students = User::where('role', 'طالب')->get();
         $houses = House::all();
 
         $students->each(function ($student) use ($houses) {
             $house = $houses->random();
-            Favorite::factory()->create(['UserId' => $student->id, 'HouseId' => $house->id]);
+            Favorite::factory()->create(['userId' => $student->id, 'houseId' => $house->id]);
         });
     }
 }

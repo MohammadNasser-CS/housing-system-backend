@@ -15,8 +15,8 @@ class NotificationFactory extends Factory
     public function definition()
     {
         return [
-            'UserId' => User::factory(),
-            'NotificationBody' => $this->faker->sentence,
+            'userId' => User::factory(),
+            'notificationBody' => $this->faker->sentence,
             'created_at' => now(),
             'updated_at' => now(),
         ];

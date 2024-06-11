@@ -15,7 +15,7 @@ class Student
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->Type === 'Student') {
+        if (auth()->check() && auth()->user()->role === 'طالب') {
             return $next($request);
         }
         return response()->json(['message' => 'Unauthorized'], 403);

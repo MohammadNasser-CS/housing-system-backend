@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\UserGenderEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequestHouseOwner extends FormRequest
 {
@@ -22,14 +24,14 @@ class RegisterRequestHouseOwner extends FormRequest
     public function rules(): array
     {
         return [
-            'Name' => 'required|string|max:255',
-            'Password' => 'required|string|min:8',
-            'Email' => 'required|string|email|max:255|unique:users',
-            'Phone' => 'required|string|max:255|unique:users',
-            'Gender' => 'required|string|max:255',
-            'RoyaltyPhoto' => 'nullable|mimes:jpeg,jpg,png,gif,bmp,svg,webp',
-            'TimesList' => 'nullable|string|max:255',
-            'DaysList' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:255|unique:users',
+            'gender' => ['required',Rule::in(array_values(UserGenderEnum::MAP))],
+            'royaltyPhoto' => 'nullable|mimes:jpeg,jpg,png,gif,bmp,svg,webp',
+            'timesList' => 'nullable|string|max:255',
+            'daysList' => 'nullable|string|max:255',
         ];
     }
     public function messages()

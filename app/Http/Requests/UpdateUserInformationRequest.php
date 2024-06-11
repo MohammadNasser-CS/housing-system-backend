@@ -22,9 +22,9 @@ class UpdateUserInformationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Name' => 'sometimes|string|max:255',
-            'Phone' => 'sometimes|string|max:20',
-            'Email' => 'sometimes|string|email|max:255',
+            'name' => 'sometimes|string|max:255',
+            'phone' => 'sometimes|string|max:20',
+            'email' => 'sometimes|string|email|max:255',
         ];
     }
 }

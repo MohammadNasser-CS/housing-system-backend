@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shared\AuthintcationController;
@@ -17,44 +18,45 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Authentication :
-    Route::post('/StudentRegister', [AuthintcationController::class, 'StudentRegister'])->withoutMiddleware(['auth:sanctum']);
-    Route::post('/HouseOwnerRegister', [AuthintcationController::class, 'HouseOwnerRegister'])->withoutMiddleware(['auth:sanctum']);
+    Route::post('/studentRegister', [AuthintcationController::class, 'studentRegister'])->withoutMiddleware(['auth:sanctum']);
+    Route::post('/houseOwnerRegister', [AuthintcationController::class, 'houseOwnerRegister'])->withoutMiddleware(['auth:sanctum']);
     Route::post('/login', [AuthintcationController::class, 'login'])->withoutMiddleware(['auth:sanctum']);
     Route::post('/logout', [AuthintcationController::class, 'logout']);
 
     // Settings :
-    Route::post('/ChangePassword', [PasswordController::class, 'ChangePassword']);
+    Route::post('/changePassword', [PasswordController::class, 'changePassword']);
     //Route::post('/ForgetPassword', [PasswordController::class, 'ForgetPassword'])->withoutMiddleware(['auth:sanctum']);
-    Route::get('/ShowMyInformation', [MyInformationController::class, 'ShowMyInformation']);
-    Route::post('/UpdateMyInformation', [MyInformationController::class, 'UpdateMyInformation']);
+    Route::get('/showMyInformation', [MyInformationController::class, 'showMyInformation']);
+    Route::post('/updateMyInformation', [MyInformationController::class, 'updateMyInformation']);
 
     // Notification :
-    Route::get('/ShowNotification', [NotifiactionController::class, 'ShowNotification']);
-
+    Route::get('/showNotification', [NotifiactionController::class, 'showNotification']);
 });
-Route::group(['middleware' => ['auth:sanctum', 'Student']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'طالب']], function () {
     // display all Apartments in main page Student
-    Route::get('/ShowApartments', [HomePageStudentController::class, 'ShowApartments']);
+    Route::get('/showApartments', [HomePageStudentController::class, 'showApartments']);
     // display all Studios in main page Student
-    Route::get('/ShowStudios', [HomePageStudentController::class, 'ShowStudios']);
+    Route::get('/showStudios', [HomePageStudentController::class, 'showStudios']);
     // display all House in main page Student
-    Route::get('/PrintHouse', [HomePageStudentController::class, 'PrintHouse']);
+    Route::get('/printHouse', [HomePageStudentController::class, 'printHouse']);
     // Search Field in main page Student
-    Route::post('/SearchFieldPost', [HomePageStudentController::class, 'SearchFieldPost']);
-    Route::get('/SearchFieldGet/{id}', [HomePageStudentController::class, 'SearchFieldGet']);
+    Route::post('/searchFieldPost', [HomePageStudentController::class, 'searchFieldPost']);
+    Route::get('/searchFieldGet/{id}', [HomePageStudentController::class, 'searchFieldGet']);
     // Show all User's Favorite House:
-    Route::get('/ShowUserFavorites', [FavoriteController::class, 'ShowUserFavorites']);
+    Route::get('/showUserFavorites', [FavoriteController::class, 'showUserFavorites']);
     //  User liked or deleted the Favorite House ( Favorite Icon )
-    Route::post('/FavoriteIcon', [FavoriteController::class, 'FavoriteIcon']);
+    Route::post('/favoriteIcon', [FavoriteController::class, 'favoriteIcon']);
     // House Details :
-    Route::get('/HouseDetails/{RequestHouseId}', [HouseDetailsController::class, 'HouseDetails']);
+    Route::get('/houseDetails/{requestHouseId}', [HouseDetailsController::class, 'houseDetails']);
     // Room Details :
-    Route::get('/RoomDetails/{RoomIdRequest}', [HouseDetailsController::class, 'RoomDetails']);
+    Route::get('/roomDetails/{roomIdRequest}', [HouseDetailsController::class, 'roomDetails']);
 });
 
-Route::group(['middleware' => 'Admin'], function () {});
+Route::group(['middleware' => 'أدمن'], function () {
+});
 
-Route::group(['middleware' => 'HouseOwner'], function () {});
+Route::group(['middleware' => 'صاحب سكن'], function () {
+});
 
 
 Route::post('/store', [ImageController::class, 'store']);

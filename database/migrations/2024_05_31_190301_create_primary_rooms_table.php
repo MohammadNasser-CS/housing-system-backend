@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\FlagEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +14,14 @@ return new class extends Migration
     {
         Schema::create('primary_rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('RoomId')->constrained('rooms')->onDelete('cascade');
-            $table->integer('BedNumber');
-            $table->integer('BedNumberBooked');
-            $table->string('RoomSpace');
-            $table->enum('Balcony', ['لا', 'نعم']);
-            $table->enum('Desk', ['لا', 'نعم']);
-            $table->enum('AC', ['لا', 'نعم']);
-            $table->string('Price');
+            $table->foreignId('roomId')->constrained('rooms')->onDelete('cascade');
+            $table->integer('bedNumber');
+            $table->integer('bedNumberBooked');
+            $table->string('roomSpace');
+            $table->enum('balcony', array_values(FlagEnum::MAP));
+            $table->enum('desk', array_values(FlagEnum::MAP));
+            $table->enum('ac', array_values(FlagEnum::MAP));
+            $table->string('price');
             $table->timestamps();
         });
     }

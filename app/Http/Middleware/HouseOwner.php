@@ -15,7 +15,7 @@ class HouseOwner
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->Type === 'HouseOwner') {
+        if (auth()->check() && auth()->user()->role === 'صاحب سكن') {
             return $next($request);
         }
         return response()->json(['message' => 'Unauthorized'], 403);    }

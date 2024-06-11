@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\HouseGenderEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AddHouseRequest extends FormRequest
 {
@@ -13,10 +15,10 @@ class AddHouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Description' => 'required',
-            'Address' => 'required',
-            'Gender' => 'required',
-            'Location' => 'required',
+            'description' => 'required',
+            'address' => 'required',
+            'gender' => ['required',Rule::in(array_values(HouseGenderEnum::MAP))],
+            'location' => 'required',
         ];
     }
 }

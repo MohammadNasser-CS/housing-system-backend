@@ -15,11 +15,11 @@ class Room extends Model
     }
     public function primaryRooms()
     {
-        return $this->hasOne(primaryRoom::class,'RoomId');
+        return $this->hasOne(primaryRoom::class,'roomId');
     }
     public function roomphotos()
     {
-        return $this->hasMany(RoomPhoto::class ,'RoomId');
+        return $this->hasMany(RoomPhoto::class ,'roomId');
     }
     public function reservations()
     {

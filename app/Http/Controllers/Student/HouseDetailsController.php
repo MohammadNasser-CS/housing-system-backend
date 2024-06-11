@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enum\RoomTypeEnum;
+use App\Enum\UserGenderEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\House;
@@ -12,50 +14,48 @@ use App\Models\PrimaryRoom;
 
 class HouseDetailsController extends Controller
 {
-    public function HouseDetails($RequestHouseId)
+    public function houseDetails($RequestHouseId)
     {
-        $HouseId = $RequestHouseId;
-        $house = House::find($HouseId);
+        $houseId = $RequestHouseId;
+        $house = House::find($houseId);
         // The Details from House :
         $houseData = [
-            'Description' => $house->Description,
-            'Internet' => $house->Internet,
-            'Water' => $house->Water,
-            'Electricity' => $house->Electricity,
-            'Gaz' => $house->Gaz,
+            'description' => $house->description,
+            'internet' => $house->internet,
+            'water' => $house->water,
+            'electricity' => $house->electricity,
+            'gas' => $house->gas,
         ];
         // House's Photo
-        $houseData['HousePhoto'] = $house->Gender === 'ذكر' ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+        $houseData['housePhoto'] = $house->gender === UserGenderEnum::MALE ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
         // HouseOwner Information :
-        $user = User::find($house->UserId);
+        $user = User::find($house->userId);
         if ($user) {
-            $houseData['Name'] = $user->Name;
-            $houseData['Phone'] = $user->Phone;
+            $houseData['name'] = $user->name;
+            $houseData['phoneNumber'] = $user->phoneNumber;
         }
-        $rooms = Room::where('HouseId', $HouseId)->get();
-
+        $rooms = Room::where('houseId', $houseId)->get();
         $primaryRoomsData = [];
         $secondaryRoomsData = [];
         foreach ($rooms as $room) {
-            if ($room->RoomType === 'Primary') {
-                $primaryRoom = PrimaryRoom::where('RoomId', $room->id)
-                    ->whereRaw('BedNumber - BedNumberBooked > 0')
+            if ($room->RoomType === '') {
+                $primaryRoom = PrimaryRoom::where('roomId', $room->id)
+                    ->whereRaw('bedNumber - bedNumberBooked > 0')
                     ->first();
                 if ($primaryRoom) {
                     $primaryRoomsData[] = [
-                        'RoomId' => $room->id,
-                        'photo' => url('storage/' . $room->roomPhotos->first()->PhotoUrl),
+                        'roomId' => $room->id,
+                        'photo' => url('storage/' . $room->roomPhotos->first()->photoUrl),
                     ];
                 }
-            } elseif ($room->RoomType === 'Secondary') {
+            } elseif ($room->roomType === RoomTypeEnum::secondaryRoom) {
                 $secondaryRoomsData[] = [
-                    'photo' => url('storage/' . $room->roomPhotos->first()->PhotoUrl),
+                    'photo' => url('storage/' . $room->roomPhotos->first()->photoUrl),
                 ];
             }
         }
-        $houseData['PrimaryRooms'] = $primaryRoomsData;
-        $houseData['SecondaryRooms'] = $secondaryRoomsData;
-
+        $houseData['primaryRooms'] = $primaryRoomsData;
+        $houseData['secondaryRooms'] = $secondaryRoomsData;
         return response()->json(['result' => $houseData], 200);
     }
     public function RoomDetails($RoomIdRequest)
@@ -63,15 +63,14 @@ class HouseDetailsController extends Controller
         $RoomId = $RoomIdRequest;
         $Room = Room::find($RoomId);
         $primaryRoom = $Room->primaryRooms;
-        $roomPhotos = $Room->roomPhotos->pluck('PhotoUrl');
-
+        $roomPhotos = $Room->roomPhotos->pluck('photoUrl');
         $data = [
-            'AvalabileBed' => $primaryRoom->BedNumber - $primaryRoom->BedNumberBooked,
-            'RoomSpace' => $primaryRoom->RoomSpace,
-            'Balcony' => $primaryRoom->Balcony,
-            'Desk' => $primaryRoom->Desk,
-            'AC' => $primaryRoom->AC,
-            'Price' => $primaryRoom->Price,
+            'avalabileBed' => $primaryRoom->bedNumber - $primaryRoom->bedNumberBooked,
+            'roomSpace' => $primaryRoom->roomSpace,
+            'balcony' => $primaryRoom->balcony,
+            'desk' => $primaryRoom->desk,
+            'ac' => $primaryRoom->ac,
+            'price' => $primaryRoom->price,
             'roomPhotos' => $roomPhotos,
         ];
         return response()->json(['result' => $data], 200);

@@ -20,10 +20,10 @@ class HouseOwnerFactory extends Factory
     public function definition(): array
     {
         return [
-            'UserId' => User::factory()->houseOwner(),
-            'RoyaltyPhoto' => $this->faker->imageUrl,
-            'TimesList' => $this->faker->word,
-            'DaysList' => $this->faker->word,
+            'userId' => User::factory()->houseOwner(),
+            'royaltyPhoto' => $this->faker->imageUrl,
+            'timesList' => $this->faker->word,
+            'daysList' => $this->faker->word,
             'created_at' => now(),
             'updated_at' => now(),
         ];

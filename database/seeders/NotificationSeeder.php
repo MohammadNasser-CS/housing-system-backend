@@ -17,7 +17,7 @@ class NotificationSeeder extends Seeder
         $users = User::all();
 
         $users->each(function ($user) {
-            Notification::factory()->count(5)->create(['UserId' => $user->id]);
+            Notification::factory()->count(5)->create(['userId' => $user->id]);
         });
     }
 }

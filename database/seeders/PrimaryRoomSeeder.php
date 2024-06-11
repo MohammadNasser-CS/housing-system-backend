@@ -14,10 +14,10 @@ class PrimaryRoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $rooms = Room::where('RoomType', 'Primary')->get();
+        $rooms = Room::where('roomType', 'نوم')->get();
 
         $rooms->each(function ($room) {
-            PrimaryRoom::factory()->create(['RoomId' => $room->id]);
+            PrimaryRoom::factory()->create(['roomId' => $room->id]);
         });
     }
 }

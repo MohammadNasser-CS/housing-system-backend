@@ -16,11 +16,11 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        $students = User::where('Type', 'Student')->get();
+        $students = User::where('role', 'طالب')->get();
 
         // إنشاء سجلات الطلاب المرتبطة
         $students->each(function ($student) {
-            Student::factory()->create(['UserId' => $student->id]);
+            Student::factory()->create(['userId' => $student->id]);
         });
     }
 }

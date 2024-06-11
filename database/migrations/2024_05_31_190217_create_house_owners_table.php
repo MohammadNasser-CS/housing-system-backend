@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('house_owners', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('UserId')->constrained('users')->onDelete('cascade');
-            $table->text('RoyaltyPhoto')->nullable();
-            $table->string('TimesList')->nullable();
-            $table->string('DaysList')->nullable();
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
+            $table->text('royaltyPhoto')->nullable();
+            $table->string('timesList')->nullable();
+            $table->string('daysList')->nullable();
             $table->timestamps();
         });
     }

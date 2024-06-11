@@ -16,8 +16,8 @@ class FavoriteFactory extends Factory
     public function definition()
     {
         return [
-            'UserId' => User::factory(),
-            'HouseId' => House::factory(),
+            'userId' => User::factory(),
+            'houseId' => House::factory(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

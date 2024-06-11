@@ -14,9 +14,9 @@ class User extends Authenticatable
 
     protected $guarded =[];
     protected $hidden = [
-        'Password',
-        'Gender',
-        'AccountStatus',
+        'password',
+        'gender',
+        'accountStatus',
         'created_at',
         'updated_at',
     ];

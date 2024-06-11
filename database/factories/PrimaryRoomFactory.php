@@ -15,14 +15,14 @@ class PrimaryRoomFactory extends Factory
     public function definition()
     {
         return [
-            'RoomId' => Room::factory(),
-            'BedNumber' => $this->faker->numberBetween(1, 4),
-            'BedNumberBooked' => $this->faker->numberBetween(0, 4),
-            'RoomSpace' => $this->faker->randomElement(['Small', 'Medium', 'Large']),
-            'Balcony' => $this->faker->randomElement(['لا', 'نعم']),
-            'Desk' => $this->faker->randomElement(['لا', 'نعم']),
-            'AC' => $this->faker->randomElement(['لا', 'نعم']),
-            'Price' => $this->faker->randomFloat(2, 100, 1000),
+            'roomId' => Room::factory(),
+            'bedNumber' => $this->faker->numberBetween(1, 4),
+            'bedNumberBooked' => $this->faker->numberBetween(0, 4),
+            'roomSpace' => $this->faker->randomElement(['16', '18', '20']),
+            'balcony' => $this->faker->randomElement(['لا', 'نعم']),
+            'desk' => $this->faker->randomElement(['لا', 'نعم']),
+            'ac' => $this->faker->randomElement(['لا', 'نعم']),
+            'price' => $this->faker->randomFloat(2, 100, 1000),
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enum\HouseTypeEnum;
+use App\Enum\RoomTypeEnum;
+use App\Enum\UserGenderEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\House;
@@ -18,33 +21,33 @@ class HomePageStudentController extends Controller
         foreach ($houses as $house) {
             $houseData = [];
             // Number Of Room in House
-            $rooms = Room::where('HouseId', $house->id)
-                ->where('RoomType', 'Primary')
+            $rooms = Room::where('houseId', $house->id)
+                ->where('roomType', RoomTypeEnum::sleepRoom)
                 ->get();
-            $NumberOfRooms = $rooms->count();
+            $numberOfRooms = $rooms->count();
             $availableRooms = 0;
             foreach ($rooms as $room) {
-                $availableRooms += PrimaryRoom::where('RoomId', $room->id)
-                    ->whereRaw('BedNumber - BedNumberBooked > 0')
+                $availableRooms += PrimaryRoom::where('roomId', $room->id)
+                    ->whereRaw('bedNumber - bedNumberBooked > 0')
                     ->count();
             }
             // If availableRooms is not zero and the gender matches, then add houseData to $Data
-            if ($availableRooms > 0 && $house->Gender === $gender) {
+            if ($availableRooms > 0 && $house->gender === $gender) {
                 $houseData = [
-                    'HouseId' => $house->id,
-                    'HouseType' => $house->HouseType,
-                    'NumberOfRooms' => $NumberOfRooms,
-                    'Address' => $house->Address,
-                    'Location' => $house->Location,
-                    'AvailableRoom' => $availableRooms,
+                    'houseId' => $house->id,
+                    'houseType' => $house->houseType,
+                    'numberOfRooms' => $numberOfRooms,
+                    'address' => $house->address,
+                    'location' => $house->location,
+                    'availableRoom' => $availableRooms,
                 ];
                 // Name of HouseOwner :
-                $user = User::find($house->UserId);
+                $user = User::find($house->userId);
                 if ($user) {
-                    $houseData['Name'] = $user->Name;
+                    $houseData['name'] = $user->name;
                 }
                 // Add HousePhoto based on gender
-                $houseData['HousePhoto'] = $gender === 'ذكر' ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+                $houseData['housePhoto'] = $gender === UserGenderEnum::MALE ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
                 $Data[] = $houseData;
             } else {
                 return response()->json(['result' => $message], 200);
@@ -52,116 +55,116 @@ class HomePageStudentController extends Controller
         }
         return $Data;
     }
-    public function PrintHouse()
+    public function printHouse()
     {
         $currentStudent = Auth::user();
-        $gender = $currentStudent->Gender;
-        $houses = House::where('Gender', $gender)->get();
+        $gender = $currentStudent->gender;
+        $houses = House::where('gender', $gender)->get();
         if ($houses->isEmpty()) {
             return response()->json(['message' => 'لا يوجد'], 404);
         }
         return $this->getdata($houses, $gender, 'لا يوجد سكنات متوفره');
     }
-    public function ShowApartments()
+    public function showApartments()
     {
         $currentStudent = Auth::user();
-        $gender = $currentStudent->Gender;
-        $houses = House::where('Gender', $gender)->where('HouseType', 'شقة')->get();
+        $gender = $currentStudent->gender;
+        $houses = House::where('gender', $gender)->where('houseType', HouseTypeEnum::Apartment)->get();
         if ($houses->isEmpty()) {
             return response()->json(['message' => 'لا يوجد'], 404);
         }
         return $this->getdata($houses, $gender, 'لا يوجد شقق متوفره ');
     }
-    public function ShowStudios()
+    public function showStudios()
     {
         $currentStudent = Auth::user();
-        $gender = $currentStudent->Gender;
-        $houses = House::where('Gender', $gender)->where('HouseType', 'استديو')->get();
+        $gender = $currentStudent->gender;
+        $houses = House::where('gender', $gender)->where('houseType', HouseTypeEnum::Studio)->get();
         if ($houses->isEmpty()) {
             return response()->json(['message' => 'لا يوجد'], 404);
         }
         return $this->getdata($houses, $gender, 'لا يوجد استديوهات متوفره');
     }
-    public function SearchFieldPost(Request $request)
+    public function searchFieldPost(Request $request)
     {
         $currentStudent = Auth::user();
-        $gender = $currentStudent->Gender;
+        $gender = $currentStudent->gender;
         $id = $request->input('id');
         $house = House::find($id);
         if (!$house) {
             return response()->json(['message' => 'لا يوجد بيت بهذاالرقم'], 404);
         }
-        if ($house->Gender !== $gender) {
-            if ($gender === 'أنثى') {
+        if ($house->gender !== $gender) {
+            if ($gender === UserGenderEnum::FEMALE) {
                 return response()->json(['message' => 'هذا سكن طلاب '], 403);
             } else {
                 return response()->json(['message' => 'هذا سكن طالبات'], 403);
             }
         }
-        $rooms = Room::where('HouseId', $house->id)
-            ->where('RoomType', 'Primary')
+        $rooms = Room::where('houseId', $house->id)
+            ->where('roomType', RoomTypeEnum::sleepRoom)
             ->get();
-        $NumberOfRooms = $rooms->count();
-        $AvailableRooms = 0;
+        $numberOfRooms = $rooms->count();
+        $availableRooms = 0;
         foreach ($rooms as $room) {
-            $AvailableRooms += PrimaryRoom::where('RoomId', $room->id)
-                ->whereRaw('BedNumber - BedNumberBooked > 0')
+            $availableRooms += PrimaryRoom::where('roomId', $room->id)
+                ->whereRaw('bedNumber - bedNumberBooked > 0')
                 ->count();
         }
-        if ($AvailableRooms == 0) {
+        if ($availableRooms == 0) {
             return response()->json(['message' => 'محجوز'], 200);
         }
         $houseData = [
-            'HouseType' => $house->HouseType,
-            'Address' => $house->Address,
-            'Location' => $house->Location,
-            'NumberOfRooms' => $rooms->count(),
-            'AvailableRooms' => $AvailableRooms,
+            'houseType' => $house->houseType,
+            'address' => $house->address,
+            'location' => $house->location,
+            'numberOfRooms' => $numberOfRooms,
+            'availableRooms' => $availableRooms,
         ];
-        $user = User::find($house->UserId);
+        $user = User::find($house->userId);
         if ($user) {
-            $houseData['Name'] = $user->Name;
+            $houseData['name'] = $user->name;
         }
-        $houseData['HousePhoto'] = $gender === 'ذكر' ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+        $houseData['housePhoto'] = $gender === UserGenderEnum::MALE ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
         return response()->json(['result' => $houseData], 200);
     }
-    public function SearchFieldGet($id)
+    public function searchFieldGet($id)
     {
         $currentStudent = Auth::user();
-        $gender = $currentStudent->Gender;
+        $gender = $currentStudent->gender;
         $house = House::find($id);
         if (!$house) {
             return response()->json(['message' => 'لا يوجد بيت بهذا الرقم'], 404);
         }
-        if ($house->Gender !== $gender) {
-            if ($gender === 'أنثى') {
+        if ($house->gender !== $gender) {
+            if ($gender === UserGenderEnum::FEMALE) {
                 return response()->json(['message' => 'هذا سكن طلاب '], 403);
             } else {
                 return response()->json(['message' => 'هذا سكن طالبات'], 403);
             }
         }
-        $rooms = Room::where('HouseId', $house->id)
-            ->where('RoomType', 'Primary')
+        $rooms = Room::where('houseId', $house->id)
+            ->where('roomType', RoomTypeEnum::sleepRoom)
             ->get();
-        $AvailableRooms = 0;
+        $availableRooms = 0;
         foreach ($rooms as $room) {
-            $AvailableRooms += PrimaryRoom::where('RoomId', $room->id)
-                ->whereRaw('BedNumber - BedNumberBooked > 0')
+            $availableRooms += PrimaryRoom::where('roomId', $room->id)
+                ->whereRaw('bedNumber - bedNumberBooked > 0')
                 ->count();
         }
-        if ($AvailableRooms == 0) {
+        if ($availableRooms == 0) {
             return response()->json(['message' => 'محجوز'], 200);
         }
         $houseData = [
-            'HouseType' => $house->HouseType,
-            'Address' => $house->Address,
-            'Location' => $house->Location,
-            'NumberOfRooms' => $rooms->count(),
-            'AvailableRooms' => $AvailableRooms,
+            'houseType' => $house->houseType,
+            'address' => $house->address,
+            'location' => $house->location,
+            'numberOfRooms' => $rooms->count(),
+            'availableRooms' => $availableRooms,
         ];
-        $user = User::find($house->UserId);
-        $houseData['Name'] = $user ? $user->Name : 'Unknown';
-        $houseData['HousePhoto'] = $gender === 'ذكر' ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+        $user = User::find($house->userId);
+        $houseData['name'] = $user ? $user->name : 'unknown';
+        $houseData['housePhoto'] = $gender === UserGenderEnum::MALE ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
         return response()->json(['result' => $houseData], 200);
     }
 }

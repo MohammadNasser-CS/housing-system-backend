@@ -20,8 +20,8 @@ class RoomPhotoFactory extends Factory
     public function definition()
     {
         return [
-            'RoomId' => Room::factory(),
-            'PhotoUrl' => $this->faker->imageUrl,
+            'roomId' => Room::factory(),
+            'photoUrl' => $this->faker->imageUrl,
             'created_at' => now(),
             'updated_at' => now(),
         ];

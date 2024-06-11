@@ -20,8 +20,8 @@ class RoomFactory extends Factory
     public function definition()
     {
         return [
-            'HouseId' => House::factory(),
-            'RoomType' => $this->faker->randomElement(['Primary', 'Secondary']),
+            'houseId' => House::factory(),
+            'roomType' => $this->faker->randomElement(['نوم', 'ثانوية']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

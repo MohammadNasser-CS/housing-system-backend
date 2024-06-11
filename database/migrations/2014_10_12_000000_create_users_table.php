@@ -1,5 +1,8 @@
 <?php
 
+use App\Enum\AccountStatusEnum;
+use App\Enum\UserGenderEnum;
+use App\Enum\UserRoleEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,13 +16,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('Name');
-            $table->string('Email')->unique();
-            $table->string('Password');
-            $table->string('Phone')->unique();
-            $table->enum('Type', ['Student', 'HouseOwner','Admin']);
-            $table->enum('Gender', ['ذكر', 'أنثى']);
-            $table->enum('AccountStatus', ['Active', 'Not_Active'])->default('Active');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('phoneNumber')->unique();
+            $table->enum('role',array_values(UserRoleEnum::MAP));
+            $table->enum('gender',array_values(UserGenderEnum::MAP));
+            $table->enum('accountStatus', array_values(AccountStatusEnum::MAP))->default(AccountStatusEnum::active);
             $table->timestamps();
         });
     }

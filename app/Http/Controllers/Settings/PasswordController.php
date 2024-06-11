@@ -20,13 +20,13 @@ class PasswordController extends Controller
     {
         $this->middleware('auth:sanctum', ['except' => ['ForgetPassword']]);
     }
-    public function ChangePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
-        if (!Hash::check($request->Password, Auth::user()->Password)) {
+        if (!Hash::check($request->password, Auth::user()->password)) {
             return response()->json(['error' => 'كلمة السر الحالية ليست متطابقه'], 400);
         }
         $user = Auth::user();
-        $user->Password = Hash::make($request->new_Password);
+        $user->password = Hash::make($request->newPassword);
         $user->save();
         return response()->json(['message' => 'تم تغيير كلمة السر بنجاح'], 200);
     }

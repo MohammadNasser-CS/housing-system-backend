@@ -14,10 +14,10 @@ class HouseSeeder extends Seeder
      */
     public function run(): void
     {
-        $houseOwners = User::where('Type', 'HouseOwner')->get();
+        $houseOwners = User::where('role', 'صاحب سكن')->get();
 
         $houseOwners->each(function ($houseOwner) {
-            House::factory()->create(['UserId' => $houseOwner->id]);
+            House::factory()->create(['userId' => $houseOwner->id]);
         });
     }
 }

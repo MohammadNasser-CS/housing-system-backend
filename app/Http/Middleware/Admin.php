@@ -15,7 +15,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->Type === 'Admin') {
+        if (auth()->check() && auth()->user()->role === 'أدمن') {
             return $next($request);
         }
         return response()->json(['message' => 'Unauthorized'], 403);

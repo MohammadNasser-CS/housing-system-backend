@@ -17,7 +17,7 @@ class RoomPhotoSeeder extends Seeder
         $rooms = Room::all();
 
         $rooms->each(function ($room) {
-            RoomPhoto::factory()->count(3)->create(['RoomId' => $room->id]);
+            RoomPhoto::factory()->count(3)->create(['roomId' => $room->id]);
         });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shared;
 
+use App\Enum\AccountStatusEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -20,55 +21,53 @@ class AuthintcationController extends Controller
     {
         $this->middleware('auth:sanctum', ['except' => ['login', 'StudentRegister', 'HouseOwnerRegister']]);
     }
-    public function StudentRegister(RegisterRequestStudent $request)
+    public function studentRegister(RegisterRequestStudent $request)
     {
-        $data = $request->validated();
-        $password = Hash::make($request['Password']);
-        $request['Password'] = $password;
+        $password = Hash::make($request['password']);
+        $request['password'] = $password;
         $user = User::create([
-            'Name' => $request['Name'],
-            'Email' => $request['Email'],
-            'Password' => $request['Password'],
-            'Phone' => $request['Phone'],
-            'Type' => 'Student',
-            'Gender' => $request['Gender'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => $request['password'],
+            'phoneNumber' => $request['phoneNumber'],
+            'role' => $request['role'],
+            'gender' => $request['gender'],
         ]);
         Student::create([
-            'UserId' => $user->id,
-            'College' => $request['College'],
-            'Specialization' => $request['Specialization'],
-            'UniversityBuilding' => $request['UniversityBuilding'],
-            'DateOfBirth' => $request['DateOfBirth'],
+            'userId' => $user->id,
+            'college' => $request['college'],
+            'specialization' => $request['specialization'],
+            'universityBuilding' => $request['universityBuilding'],
+            'birthDate' => $request['birthDate'],
         ]);
         return $this->respondWithToken($user, 'تم إنشاء حساب بنجاح');
     }
-    public function HouseOwnerRegister(RegisterRequestHouseOwner $request)
+    public function houseOwnerRegister(RegisterRequestHouseOwner $request)
     {
-        $Data = $request->validated();
-        $Password = Hash::make($Data['Password']);
-        $Data['Password'] = $Password;
+        $password = Hash::make($request['password']);
+        $request['password'] = $password;
         $UserData = [
-            'Name' => $Data['Name'],
-            'Email' => $Data['Email'],
-            'Password' => $Password,
-            'Type' => 'HouseOwner',
-            'Phone' => $Data['Phone'],
-            'Gender' => $Data['Gender'],
-            'AccountStatus' => 'Not_Active',
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => $password,
+            'role' => $request['role'],
+            'phoneNumber' => $request['phoneNumber'],
+            'gender' => $request['gender'],
+            'accountStatus' => AccountStatusEnum::notActive,
         ];
         $user = User::create($UserData);
         $HouseOwnerData = [
             'UserId' => $user->id,
-            'TimesList' => $Data['TimesList'] ?? null,
-            'DaysList' => $Data['DaysList'] ?? null,
+            'timesList' => $request['timesList'] ?? null,
+            'daysList' => $request['daysList'] ?? null,
         ];
-        if ($request->hasFile('RoyaltyPhoto')) {
-            $path = $request->file('RoyaltyPhoto')->store('photos', 'public');
-            $HouseOwnerData['RoyaltyPhoto'] = $path;
+        if ($request->hasFile('royaltyPhoto')) {
+            $path = $request->file('royaltyPhoto')->store('photos', 'public');
+            $HouseOwnerData['royaltyPhoto'] = $path;
         }
 
         HouseOwner::create($HouseOwnerData);
-        if (!isset($HouseOwnerData['RoyaltyPhoto'])) {
+        if (!isset($HouseOwnerData['royaltyPhoto'])) {
             return response()->json(['message' => 'تم التسجيل بنجاح، سيتم التواصل معك لقبول حسابك'], 201);
         } else {
             return response()->json(['message' => 'تم التسجيل بنجاح، يرجى الانتظار لقبول الادمن حسابك'], 201);
@@ -76,12 +75,12 @@ class AuthintcationController extends Controller
     }
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('Email', 'Password');
-        $user = User::where('Email', $credentials['Email'])->first();
-        if (!$user || !Hash::check($credentials['Password'], $user->Password)) {
+        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['error' => 'يوجد خطأ في الايميل أو كلمة السر'], 401);
         }
-        if ($user->AccountStatus == 'Not_Active') {
+        if ($user->AccountStatus == AccountStatusEnum::notActive) {
             return response()->json(['message' => 'لم يتم قبول حسابك بعد'], 403);
         }
         return $this->respondWithToken($user, 'تم تسجيل الدخول');

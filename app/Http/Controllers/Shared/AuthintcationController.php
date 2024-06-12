@@ -78,7 +78,7 @@ class AuthintcationController extends Controller
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $credentials['email'])->first();
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['error' => 'يوجد خطأ في الايميل أو كلمة السر'], 401);
+            return response()->json(['message' => 'يوجد خطأ في الايميل أو كلمة السر'], 401);
         }
         if ($user->accountStatus === AccountStatusEnum::notActive->value) {
             return response()->json(['message' => 'لم يتم قبول حسابك بعد'], 403);
@@ -105,6 +105,7 @@ class AuthintcationController extends Controller
                 'access_token' => $token,
                 'token_type' => 'bearer',
                 'message' => $message,
+                'logged'=>true,
             ]);
         }
         return response()->json(['error' => 'User not authenticated'], 401);

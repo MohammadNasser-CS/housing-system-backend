@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('gender',array_values(UserGenderEnum::MAP));
             $table->string('location');
             $table->enum('internet', array_values(FlagEnum::MAP));
-            $table->enum('eater', array_values(FlagEnum::MAP));
+            $table->enum('water', array_values(FlagEnum::MAP));
             $table->enum('electricity', array_values(FlagEnum::MAP));
             $table->enum('gas', array_values(FlagEnum::MAP));
             $table->timestamps();

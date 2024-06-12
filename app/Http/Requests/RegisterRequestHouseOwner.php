@@ -27,7 +27,7 @@ class RegisterRequestHouseOwner extends FormRequest
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255|unique:users',
+            'phoneNumber' => 'required|string|max:255|unique:users',
             'gender' => ['required',Rule::in(array_values(UserGenderEnum::MAP))],
             'royaltyPhoto' => 'nullable|mimes:jpeg,jpg,png,gif,bmp,svg,webp',
             'timesList' => 'nullable|string|max:255',

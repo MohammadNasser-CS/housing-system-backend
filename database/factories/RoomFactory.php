@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Factories;
+
+use App\Enum\RoomTypeEnum;
 use App\Models\Room;
 use App\Models\House;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,7 +23,7 @@ class RoomFactory extends Factory
     {
         return [
             'houseId' => House::factory(),
-            'roomType' => $this->faker->randomElement(['نوم', 'ثانوية']),
+            'roomType' => $this->faker->randomElement(array_values(RoomTypeEnum::MAP)),
             'created_at' => now(),
             'updated_at' => now(),
         ];

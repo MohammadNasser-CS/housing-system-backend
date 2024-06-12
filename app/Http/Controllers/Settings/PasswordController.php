@@ -22,8 +22,8 @@ class PasswordController extends Controller
     }
     public function changePassword(ChangePasswordRequest $request)
     {
-        if (!Hash::check($request->password, Auth::user()->password)) {
-            return response()->json(['error' => 'كلمة السر الحالية ليست متطابقه'], 400);
+        if (Hash::make($request['password']) == Auth::user()->password) {
+            return response()->json(['message' => 'كلمة السر الحالية ليست متطابقه'], 400);
         }
         $user = Auth::user();
         $user->password = Hash::make($request->newPassword);

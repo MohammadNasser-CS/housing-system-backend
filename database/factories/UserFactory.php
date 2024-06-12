@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enum\AccountStatusEnum;
+use App\Enum\UserGenderEnum;
 use App\Enum\UserRoleEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -26,8 +27,8 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'),
             'phoneNumber' => $this->faker->unique()->phoneNumber,
-            'role' => $this->faker->randomElement(['طالب', 'صاحب سكن']),
-            'gender' => $this->faker->randomElement(['ذكر', 'أنثى']),
+            'role' => $this->faker->randomElement(array_values(UserRoleEnum::MAP)),
+            'gender' => $this->faker->randomElement(array_values(UserGenderEnum::MAP)),
             'created_at' => now(),
             'updated_at' => now(),
         ];
@@ -64,11 +65,6 @@ class UserFactory extends Factory
             ],
         );
     }
-    public function configure()
-    {
-        return $this->afterCreating(function (User $user) {
-            $user->createToken('default_token');
-        });
-    }
+    
 }
 

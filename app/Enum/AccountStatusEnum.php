@@ -9,5 +9,5 @@ enum AccountStatusEnum: string
         'Not_Active'
     ];
     case active = 'Active';
-    case notActive = 'Not_Active';
+    case notActive = "Not_Active";
 }

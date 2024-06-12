@@ -53,7 +53,7 @@ class AuthintcationController extends Controller
             'role' => $request['role'],
             'phoneNumber' => $request['phoneNumber'],
             'gender' => $request['gender'],
-            'accountStatus' => AccountStatusEnum::notActive,
+            'accountStatus' => AccountStatusEnum::notActive->value,
         ];
         $user = User::create($UserData);
         $HouseOwnerData = [
@@ -80,15 +80,18 @@ class AuthintcationController extends Controller
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['error' => 'يوجد خطأ في الايميل أو كلمة السر'], 401);
         }
-        if ($user->AccountStatus == AccountStatusEnum::notActive) {
+        if ($user->accountStatus === AccountStatusEnum::notActive->value) {
             return response()->json(['message' => 'لم يتم قبول حسابك بعد'], 403);
         }
+
+        $user->tokens()->delete();
+
         return $this->respondWithToken($user, 'تم تسجيل الدخول');
     }
     public function logout(Request $request)
     {
         if (!$request->user() || !$request->user()->currentAccessToken()) {
-            return response()->json(['message' => 'التوكن غير موجود'], 401);
+            return response()->json(['message' => 'المستخدم غير مسجل دخول'], 401);
         }
 
         $request->user()->currentAccessToken()->delete();
@@ -102,7 +105,6 @@ class AuthintcationController extends Controller
                 'access_token' => $token,
                 'token_type' => 'bearer',
                 'message' => $message,
-                //'user' => $user,
             ]);
         }
         return response()->json(['error' => 'User not authenticated'], 401);

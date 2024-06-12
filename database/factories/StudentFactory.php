@@ -1,6 +1,10 @@
 <?php
 
 namespace Database\Factories;
+
+use App\Enum\CollegesEnum;
+use App\Enum\SpecializationsEnum;
+use App\Enum\UniversityBuildingsEnum;
 use App\Models\Student;
 use App\Models\User;
 
@@ -22,9 +26,9 @@ class StudentFactory extends Factory
     {
         return [
             'userId' => User::factory()->student(),
-            'college' => $this->faker->word,
-            'specialization' => $this->faker->word,
-            'universityBuilding' => $this->faker->word,
+            'college' => $this->faker->randomElement(array_values(CollegesEnum::MAP)),
+            'specialization' => $this->faker->randomElement(array_values(SpecializationsEnum::MAP)),
+            'universityBuilding' => $this->faker->randomElement(array_values(UniversityBuildingsEnum::MAP)),
             'birthDate' => $this->faker->date,
             'created_at' => now(),
             'updated_at' => now(),

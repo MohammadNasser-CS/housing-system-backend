@@ -56,7 +56,7 @@ class MyInformationController extends Controller
                 ->first();
             if ($existingPhone) {
                 return response()->json(['message' => 'Phone number is already in use'], 422);
-            }else{
+            } else {
                 $user->phoneNumber = $newPhone;
                 $user->save();
                 return response()->json(['message' => 'User information updated successfully'], 200);
@@ -68,17 +68,16 @@ class MyInformationController extends Controller
                 ->first();
             if ($existingEmail) {
                 return response()->json(['message' => 'Email is already in use'], 422);
-            }else{
+            } else {
                 $user->email = $newEmail;
                 $user->save();
                 return response()->json(['message' => 'User information updated successfully'], 200);
             }
         }
-        if($nameHasChanged){
+        if ($nameHasChanged) {
             $user->name = $newName;
             $user->save();
             return response()->json(['message' => 'User information updated successfully'], 200);
         }
-
     }
 }

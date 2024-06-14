@@ -57,7 +57,7 @@ class AuthintcationController extends Controller
         ];
         $user = User::create($UserData);
         $HouseOwnerData = [
-            'UserId' => $user->id,
+            'userId' => $user->id,
             'timesList' => $request['timesList'] ?? null,
             'daysList' => $request['daysList'] ?? null,
         ];
@@ -68,9 +68,9 @@ class AuthintcationController extends Controller
 
         HouseOwner::create($HouseOwnerData);
         if (!isset($HouseOwnerData['royaltyPhoto'])) {
-            return response()->json(['message' => 'تم التسجيل بنجاح، سيتم التواصل معك لقبول حسابك'], 201);
+            return response()->json(['message' => 'تم التسجيل بنجاح، سيتم التواصل معك لقبول حسابك', 'isRegistered' => true,], 201);
         } else {
-            return response()->json(['message' => 'تم التسجيل بنجاح، يرجى الانتظار لقبول الادمن حسابك'], 201);
+            return response()->json(['message' => 'تم التسجيل بنجاح، يرجى الانتظار لقبول الادمن حسابك', 'isRegistered' => true,], 201);
         }
     }
     public function login(LoginRequest $request)
@@ -105,7 +105,7 @@ class AuthintcationController extends Controller
                 'access_token' => $token,
                 'token_type' => 'bearer',
                 'message' => $message,
-                'logged'=>true,
+                'logged' => true,
             ]);
         }
         return response()->json(['error' => 'User not authenticated'], 401);

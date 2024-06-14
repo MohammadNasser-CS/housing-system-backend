@@ -30,24 +30,28 @@ class MyInformationController extends Controller
     public function updateMyInformation(UpdateUserInformationRequest $request)
     {
         $user = Auth::user();
+
         // The Old Information for User :
         $oldName = $user->name;
         $oldPhone = $user->phoneNumber;
         $oldEmail = $user->email;
+
         // The New Information for User (get from Request if Changed) :
-        $newName = $request->input('name', $oldName); // Default to current name if not provided
-        $newPhone = $request->input('phoneNumber', $oldPhone); // Default to current phoneNumber if not provided
-        $newEmail = $request->input('email', $oldEmail); // Default to current email if not provided
+        $newName = $request->input('name', $oldName);
+        $newPhone = $request->input('phoneNumber', $oldPhone);
+        $newEmail = $request->input('email', $oldEmail);
 
         $nameHasChanged = $newName !== $oldName;
         $phoneHasChanged = $newPhone !== $oldPhone;
         $emailHasChanged = $newEmail !== $oldEmail;
+
         // Check if any of the fields have changed
-
-
-        if (!($nameHasChanged && $phoneHasChanged && $emailHasChanged)) {
-            return response()->json(['message' => 'No updates provided'], 422);
+        if (!($nameHasChanged || $phoneHasChanged || $emailHasChanged)) {
+            return response()->json(['message' => 'لم تقم بأي تعديل'], 422);
         }
+
+        // Initialize an array to hold update messages
+        $updateMessages = [];
 
         // Check if the new email or phone number already exists for another user
         if ($phoneHasChanged) {
@@ -55,29 +59,34 @@ class MyInformationController extends Controller
                 ->where('id', '!=', $user->id)
                 ->first();
             if ($existingPhone) {
-                return response()->json(['message' => 'Phone number is already in use'], 422);
+                return response()->json(['message' => 'رقم الهاتف مستخدم من قبل مستخدم آخر'], 422);
             } else {
                 $user->phoneNumber = $newPhone;
-                $user->save();
-                return response()->json(['message' => 'User information updated successfully'], 200);
+                $updateMessages[] = 'تم تحديث رقم الهاتف بنجاح';
             }
         }
+
         if ($emailHasChanged) {
             $existingEmail = User::where('email', $newEmail)
                 ->where('id', '!=', $user->id)
                 ->first();
             if ($existingEmail) {
-                return response()->json(['message' => 'Email is already in use'], 422);
+                return response()->json(['message' => 'البريد الإلكتروني مستخدم من قبل مستخدم آخر'], 422);
             } else {
                 $user->email = $newEmail;
-                $user->save();
-                return response()->json(['message' => 'User information updated successfully'], 200);
+                $updateMessages[] = 'تم تحديث البريد الإلكتروني بنجاح';
             }
         }
+
         if ($nameHasChanged) {
             $user->name = $newName;
-            $user->save();
-            return response()->json(['message' => 'User information updated successfully'], 200);
+            $updateMessages[] = 'تم تحديث الإسم بنجاح';
         }
+
+        // Save the updated user information
+        $user->save();
+
+        // Return the update messages
+        return response()->json(['message' => implode(', ', $updateMessages)], 200);
     }
 }

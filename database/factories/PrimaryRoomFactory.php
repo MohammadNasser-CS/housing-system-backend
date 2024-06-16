@@ -18,8 +18,8 @@ class PrimaryRoomFactory extends Factory
     {
         return [
             'roomId' => Room::factory(),
-            'bedNumber' => $this->faker->numberBetween(1, 4),
-            'bedNumberBooked' => $this->faker->numberBetween(0, 4),
+            'bedNumber' => $this->faker->numberBetween(3, 4),
+            'bedNumberBooked' => $this->faker->numberBetween(1, 3),
             'roomSpace' => $this->faker->randomElement(['16', '18', '20']),
             'balcony' => $this->faker->randomElement(array_values(FlagEnum::MAP)),
             'desk' => $this->faker->randomElement(array_values(FlagEnum::MAP)),

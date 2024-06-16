@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/houseOwnerRegister', [AuthintcationController::class, 'houseOwnerRegister'])->withoutMiddleware(['auth:sanctum']);
     Route::post('/login', [AuthintcationController::class, 'login'])->withoutMiddleware(['auth:sanctum']);
     Route::post('/logout', [AuthintcationController::class, 'logout']);
+    Route::get('/getUser', [AuthintcationController::class, 'getUser']);
 
     // Settings :
     Route::post('/changePassword', [PasswordController::class, 'changePassword']);
@@ -32,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Notification :
     Route::get('/showNotification', [NotifiactionController::class, 'showNotification']);
 });
-Route::group(['middleware' => ['auth:sanctum', 'طالب']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'Student']], function () {
     // display all Apartments in main page Student
     Route::get('/showApartments', [HomePageStudentController::class, 'showApartments']);
     // display all Studios in main page Student
@@ -52,10 +53,10 @@ Route::group(['middleware' => ['auth:sanctum', 'طالب']], function () {
     Route::get('/roomDetails/{roomIdRequest}', [HouseDetailsController::class, 'roomDetails']);
 });
 
-Route::group(['middleware' => 'أدمن'], function () {
+Route::group(['middleware' => 'Admin'], function () {
 });
 
-Route::group(['middleware' => 'صاحب سكن'], function () {
+Route::group(['middleware' => 'HouseOwner'], function () {
 });
 
 

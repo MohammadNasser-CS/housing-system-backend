@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enum\FlagEnum;
+use App\Enum\HouseGenderEnum;
 use App\Enum\HouseTypeEnum;
 use App\Enum\UserGenderEnum;
 use App\Models\House;
@@ -29,7 +30,7 @@ class HouseFactory extends Factory
             'description' => $this->faker->paragraph,
             'address' => $this->faker->address,
             'houseType' => $this->faker->randomElement(array_values(HouseTypeEnum::MAP)),
-            'gender' => $this->faker->randomElement(array_values(UserGenderEnum::MAP)),
+            'gender' => $this->faker->randomElement(array_values(HouseGenderEnum::MAP)),
             'location' => $this->faker->address,
             'internet' => $this->faker->randomElement(array_values(FlagEnum::MAP)),
             'water' => $this->faker->randomElement(array_values(FlagEnum::MAP)),

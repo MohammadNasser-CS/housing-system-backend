@@ -1,8 +1,8 @@
 <?php
 
 use App\Enum\FlagEnum;
+use App\Enum\HouseGenderEnum;
 use App\Enum\HouseTypeEnum;
-use App\Enum\UserGenderEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('address');
             $table->enum('houseType', array_values(HouseTypeEnum::MAP));
-            $table->enum('gender',array_values(UserGenderEnum::MAP));
+            $table->enum('gender',array_values(HouseGenderEnum::MAP));
             $table->string('location');
             $table->enum('internet', array_values(FlagEnum::MAP));
             $table->enum('water', array_values(FlagEnum::MAP));

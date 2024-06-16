@@ -97,6 +97,21 @@ class AuthintcationController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'تم تسجيل الخروج بنجاح'], 200);
     }
+    public function getUser()
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // Return the authenticated user's details
+            return response()->json([
+                'user' => Auth::user()
+            ], 200);
+        } else {
+            // Return a response indicating the user is not authenticated
+            return response()->json([
+                'user' => null,
+            ], 401);
+        }
+    }
     protected function respondWithToken($user, $message)
     {
         if ($user) {

@@ -16,20 +16,21 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    public function showUserFavorites()
+    public function getFavoriteHouses()
     {
         $currentStudent = Auth::user();
+
         $userId = $currentStudent->id;
         $gender = $currentStudent->gender;
         $Favorites = Favorite::where('userId', $userId)->get();
+        $Data = [];
         if ($Favorites->isEmpty()) {
-            return response()->json(['result' => 'لا يوجد']);
+            return response()->json(['message' => 'لا يوجد تسجيلات إعجاب']);
         } else {
-            $data = [];
             foreach ($Favorites as $Favorite) {
-                $houses = House::find($Favorite->houseId);
+                $house = House::find($Favorite->houseId);
                 $houseData = [];
-                $rooms = Room::where('houseId', $houses->id)
+                $rooms = Room::where('houseId', $house->id)
                     ->where('roomType', RoomTypeEnum::sleepRoom)
                     ->get();
                 $numberOfRooms = $rooms->count();
@@ -39,44 +40,51 @@ class FavoriteController extends Controller
                         ->whereRaw('bedNumber - bedNumberBooked > 0')
                         ->count();
                 }
+
                 $houseData = [
-                    'houseId' => $houses->id,
-                    'houseType' => $houses->houseType,
+                    'houseId' => $house->id,
+                    'houseType' => $house->houseType,
                     'numberOfRooms' => $numberOfRooms,
-                    'address' => $houses->address,
-                    'location' => $houses->location,
+                    'address' => $house->address,
+                    'location' => $house->location,
                     'availableRoom' => $availableRooms,
                 ];
                 if ($availableRooms === 0) {
                     $houseData['message'] = 'العقار محجوز كامل';
                 }
                 // Name of HouseOwner :
-                $user = User::find($houses->userId);
+                $user = User::find($house->userId);
                 if ($user) {
-                    $houseData['name'] = $user->name;
+                    $houseData['ownerName'] = $user->name;
                 }
                 // Add HousePhoto based on gender
-                $houseData['housePhoto'] = $gender === UserGenderEnum::MALE ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+                $houseData['housePhoto'] = $gender === UserGenderEnum::MALE->value ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
+
+                $currentStudent = Auth::user();
+                $favorite = Favorite::where('userId', $currentStudent->id)
+                    ->where('houseId', $house->id)
+                    ->first();
+                $houseData['isFavorite'] = $favorite ? true : false;
                 $Data[] = $houseData;
             }
-            return response()->json(['result' => $Data]);
+            return response()->json(['houses' => $Data]);
         }
     }
-    public function favoriteIcon(Request $request)
+    public function changeFavorite($houseId)
     {
         $currentStudent = Auth::user();
         $userId = $currentStudent->id;
-        $houseId = $request->houseId;
+
         $Favorite = Favorite::where('userId', $userId)->where('houseId', $houseId)->first();
-        if($Favorite){
+        if ($Favorite) {
             $Favorite->delete();
-            return response()->json(['result' => 'تم الغاء الاعجاب']);
-        }else{
+            return response()->json(['message' => 'تم الغاء الاعجاب']);
+        } else {
             $Favorite = new Favorite();
             $Favorite->UserId = $userId;
             $Favorite->HouseId = $houseId;
             $Favorite->save();
-            return response()->json(['result' => 'تم الاعجاب']);
+            return response()->json(['message' => 'تم الاعجاب']);
         }
     }
 }

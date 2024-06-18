@@ -84,7 +84,7 @@ class AuthintcationController extends Controller
             return response()->json(['message' => 'لم يتم قبول حسابك بعد'], 403);
         }
 
-        $user->tokens()->delete();
+        // $user->tokens()->delete();
 
         return $this->respondWithToken($user, 'تم تسجيل الدخول');
     }

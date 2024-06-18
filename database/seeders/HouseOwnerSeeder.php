@@ -16,7 +16,6 @@ class HouseOwnerSeeder extends Seeder
     {
         $houseOwners = User::where('role', 'صاحب سكن')->get();
 
-        // إنشاء سجلات مالكي المنازل المرتبطة
         $houseOwners->each(function ($houseOwner) {
             HouseOwner::factory()->create(['userId' => $houseOwner->id]);
         });

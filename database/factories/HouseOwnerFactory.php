@@ -22,8 +22,6 @@ class HouseOwnerFactory extends Factory
         return [
             'userId' => User::factory()->houseOwner(),
             'royaltyPhoto' => $this->faker->imageUrl,
-            'timesList' => $this->faker->word,
-            'daysList' => $this->faker->word,
             'created_at' => now(),
             'updated_at' => now(),
         ];

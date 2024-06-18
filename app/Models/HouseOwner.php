@@ -13,4 +13,8 @@ class HouseOwner extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function availableTimes()
+    {
+        return $this->hasMany(AvailableTime::class, 'houseOwnerId');
+    }
 }

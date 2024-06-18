@@ -11,14 +11,14 @@ class ReservationRequest extends Model
     protected $guarded =[];
     public function Student()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class , 'studentId');
     }
     public function HouseOwner()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class , 'houseOwnerId');
     }
     public function rooms()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Room::class , 'roomId');
     }
 }

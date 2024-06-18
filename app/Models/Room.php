@@ -11,7 +11,7 @@ class Room extends Model
     protected $guarded =[];
     public function houses()
     {
-        return $this->belongsTo(House::class);
+        return $this->belongsTo(House::class,'houseId');
     }
     public function primaryRooms()
     {

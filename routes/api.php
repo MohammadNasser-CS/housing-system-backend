@@ -63,23 +63,15 @@ Route::group(['middleware' => ['auth:sanctum', 'Student']], function () {
     Route::delete('/cancelRequest/{requestId}', [MyRoom::class, 'cancelRequest']); // ✅
 });
 
-Route::group(['middleware' => 'Admin'], function () {
-    // get all request register from houseOwner :
-    Route::get('/getHouseOwnerRequest', [AcceptHouseOwner::class, 'getHouseOwnerRequest']);
-    // Accpet the house owner
-    Route::put('/acceptHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'acceptHouseOwner']);
-    // reject the house owner
-    Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']);
-
-});
-
 Route::group(['middleware' => 'HouseOwner'], function () {
     // Time slots for HouseOwner
-    Route::post('/AddtimeSlotsAvailable', [HomePageHouseOwner::class, 'AddtimeSlotsAvailable']);
+    Route::post('/addtimeSlotsAvailable', [HomePageHouseOwner::class, 'addtimeSlotsAvailable']); // ✅
+    // Add House :
+    Route::post('/addHouse', [AddHouse::class, 'addHouse']); // ✅
     // All houses for HouseOwner  :
-    Route::get('/getAllHousesHouseOwner', [HomePageHouseOwner::class, 'getAllHousesHouseOwner']);
+    Route::get('/getAllHousesHouseOwner', [HomePageHouseOwner::class, 'getAllHousesHouseOwner']); // ✅
     // Search Field in Main page of HouseOwner :
-    Route::get('/getSearchHouse/{HouseId}', [HomePageHouseOwner::class, 'getSearchHouse']);
+    Route::get('/searchHouse/{houseId}', [HomePageHouseOwner::class, 'searchHouse']); // ✅
 
     // view HouseOwner Request
     Route::get('/HouseOwnerRequests', [RequestPage::class, 'HouseOwnerRequests']);
@@ -87,8 +79,6 @@ Route::group(['middleware' => 'HouseOwner'], function () {
     Route::delete('/RejectRequestHouseOwenr/{requestId}', [RequestPage::class, 'RejectRequestHouseOwenr']);
     //confirmAppointment
     Route::put('/confirmAppointment/{requestId}', [RequestPage::class, 'confirmAppointment']);
-    // Add House :
-    Route::post('/AddHouse', [AddHouse::class, 'AddHouse']);
     // Add Room :
     Route::post('/AddRoom', [AddHouse::class, 'AddRoom']);
 
@@ -98,5 +88,14 @@ Route::group(['middleware' => 'HouseOwner'], function () {
     Route::get('/getroomDetails/{roomId}', [HouseDetails::class, 'getroomDetails']);
 });
 
+Route::group(['middleware' => 'Admin'], function () {
+    // get all request register from houseOwner :
+    Route::get('/getHouseOwnerRequest', [AcceptHouseOwner::class, 'getHouseOwnerRequest']);
+    // Accpet the house owner
+    Route::put('/acceptHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'acceptHouseOwner']);
+    // reject the house owner
+    Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']);
+
+});
 
 Route::post('/store', [ImageController::class, 'store']);

@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 class AddHouse extends Controller
 {
-    public function AddHouse(StoreHouseRequest $request)
+    public function addHouse(StoreHouseRequest $request)
     {
         House::create([
             'description' => $request['description'],

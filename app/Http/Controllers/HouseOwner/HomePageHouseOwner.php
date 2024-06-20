@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Auth;
 
 class HomePageHouseOwner extends Controller
 {
-    public function AddtimeSlotsAvailable(Request $request)
+    public function addtimeSlotsAvailable(Request $request)
     {
         $houseOwnerId = Auth::id();
         $houseOwnerId = HouseOwner::where('userId', $houseOwnerId)->value('id');
-        $data = $request->input('Data');
+        $data = $request->input('data');
 
         if ($data) {
             AvailableTimes::where('houseOwnerId', $houseOwnerId)->delete();
@@ -56,7 +56,7 @@ class HomePageHouseOwner extends Controller
         if ($houses->isEmpty()) {
             return response()->json(['message' => 'لا يوجد'], 404);
         }
-        $Data = [];
+        $data = [];
         foreach ($houses as $house) {
             $houseData = [];
             $rooms = Room::where('houseId', $house->id)
@@ -70,43 +70,44 @@ class HomePageHouseOwner extends Controller
                     ->count();
             }
             $houseData = [
-                'houseId' => "$house->id",
+                'houseId' => $house->id,
                 'houseType' => $house->houseType,
-                'numberOfRooms' => "$numberOfRooms",
+                'numberOfRooms' => $numberOfRooms,
                 'address' => $house->address,
                 'location' => $house->location,
-                'availableRoom' => "$availableRooms",
+                'availableRoom' => $availableRooms,
                 'ownername' => $houseOwnerName,
             ];
             $houseData['housePhoto'] = $house->gender === HouseGenderEnum::MALE->value ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
-            $Data[] = $houseData;
+            $data[] = $houseData;
         }
-        return response()->json(['result' => $Data], 200);
+        return response()->json(['houses' => $data], 200);
     }
-    public function getSearchHouse($HouseId)
+    public function searchHouse($houseId)
     {
         $houseOwnerId = Auth::id();
         $houseOwnerName = Auth::user()->name;
-        $house = House::find($HouseId);
+        $house = House::find($houseId);
         if (!$house || $house->userId !== $houseOwnerId) {
-            return response()->json(['error' => 'لا يوجد لك بيت في هذا الرقم'], 404);
+            return response()->json(['message' => 'لا يوجد لك بيت في هذا الرقم'], 404);
         }
-        $houseData = [];
+        $houseData[] = [];
         $rooms = Room::where('houseId', $house->id)
             ->where('roomType', RoomTypeEnum::sleepRoom->value)
             ->get();
         $numberOfRooms = $rooms->count();
         $availableRooms = 0;
         $houseData = [
-            'houseId' => "$house->id",
+            'houseId' => $house->id,
             'houseType' => $house->houseType,
-            'numberOfRooms' => "$numberOfRooms",
+            'numberOfRooms' => $numberOfRooms,
             'address' => $house->address,
             'location' => $house->location,
-            'availableRoom' => "$availableRooms",
+            'availableRoom' => $availableRooms,
             'ownername' => $houseOwnerName,
         ];
         $houseData['housePhoto'] = $house->gender === HouseGenderEnum::MALE->value ? url('storage/Photos/boy_house.png') : url('storage/Photos/girl_house.png');
-        return response()->json(['result' => $houseData], 200);
+        $data[] = $houseData;
+        return response()->json(['houses' => $data], 200);
     }
 }

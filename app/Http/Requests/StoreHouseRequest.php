@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enum\FlagEnum;
 use App\Enum\HouseGenderEnum;
 use App\Enum\HouseTypeEnum;
+use App\Enum\UniversityBuildingsEnum;
 use Illuminate\Validation\Rule;
 
 
@@ -21,7 +24,7 @@ class StoreHouseRequest extends FormRequest
             'address' => 'required|string|max:255',
             'houseType' => ['required', Rule::in(array_values(HouseTypeEnum::MAP))],
             'gender' => ['required', Rule::in(array_values(HouseGenderEnum::MAP))],
-            'location' => 'required|string|max:255',
+            'location' => ['required', Rule::in(array_values(UniversityBuildingsEnum::MAP))],
             'internet' => ['required', Rule::in(array_values(FlagEnum::MAP))],
             'water' => ['required', Rule::in(array_values(FlagEnum::MAP))],
             'electricity' => ['required', Rule::in(array_values(FlagEnum::MAP))],
@@ -31,7 +34,7 @@ class StoreHouseRequest extends FormRequest
     public function messages()
     {
         return [
-           'description.required' => 'الوصف مطلوب.',
+            'description.required' => 'الوصف مطلوب.',
             'address.required' => 'العنوان مطلوب.',
             'houseType.required' => 'نوع البيت مطلوب.',
             'gender.required' => 'الجنس مطلوب.',

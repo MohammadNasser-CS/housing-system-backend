@@ -28,10 +28,9 @@ class RegisterRequestHouseOwner extends FormRequest
             'password' => 'required|string|min:8',
             'email' => 'required|string|email|max:255|unique:users',
             'phoneNumber' => 'required|string|max:255|unique:users',
-            'gender' => ['required',Rule::in(array_values(UserGenderEnum::MAP))],
-            'royaltyPhoto' => 'nullable|mimes:jpeg,jpg,png,gif,bmp,svg,webp',
-            'timesList' => 'nullable|string|max:255',
-            'daysList' => 'nullable|string|max:255',
+            'gender' => ['required', Rule::in(array_values(UserGenderEnum::MAP))],
+            'base64Image' => 'nullable|string',
+            'imageExtension' => 'nullable|string',
         ];
     }
     public function messages()

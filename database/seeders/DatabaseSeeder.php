@@ -21,15 +21,15 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         // $this->call(UserSeder::class);
-        $this->call(StudentSeeder::class);
-        $this->call(HouseOwnerSeeder::class);
-        $this->call(HouseSeeder::class);
-        $this->call(RoomSeeder::class);
-        $this->call(RoomPhotoSeeder::class);
-        $this->call(ReservationSeeder::class);
-        $this->call(NotificationSeeder::class);
-        $this->call(FavoriteSeeder::class);
-        $this->call(PrimaryRoomSeeder::class);
-        $this->call(AvailableTimesSeeder::class);
+        // $this->call(StudentSeeder::class);
+        // $this->call(HouseOwnerSeeder::class);
+        // $this->call(HouseSeeder::class);
+        // $this->call(RoomSeeder::class);
+        // $this->call(RoomPhotoSeeder::class);
+        // $this->call(ReservationSeeder::class);
+        // $this->call(NotificationSeeder::class);
+        // $this->call(FavoriteSeeder::class);
+        // $this->call(PrimaryRoomSeeder::class);
+        // $this->call(AvailableTimesSeeder::class);
     }
 }

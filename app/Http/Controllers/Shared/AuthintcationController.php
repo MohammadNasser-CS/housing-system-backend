@@ -9,11 +9,11 @@ use App\Models\User;
 use App\Models\Student;
 use App\Models\HouseOwner;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validate;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RegisterRequestStudent;
 use App\Http\Requests\RegisterRequestHouseOwner;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Storage;
 
 class AuthintcationController extends Controller
 {
@@ -58,19 +58,28 @@ class AuthintcationController extends Controller
         $user = User::create($UserData);
         $HouseOwnerData = [
             'userId' => $user->id,
-            'timesList' => $request['timesList'] ?? null,
-            'daysList' => $request['daysList'] ?? null,
         ];
-        if ($request->hasFile('royaltyPhoto')) {
-            $path = $request->file('royaltyPhoto')->store('photos', 'public');
+        if ($request->has('base64Image') && $request->has('imageExtension')) {
+            $imageData = base64_decode($request['base64Image']);
+            if ($imageData === false) {
+                return response()->json(['message' => 'Invalid base64 format'], 400);
+            }
+            $imageExtension = $request['imageExtension'];
+            $nameFile = str_replace(' ', '_', $request['name']);
+            $path = 'photos/' . $nameFile . '/RoyaltyPhoto/' . $nameFile . '.' . $imageExtension;
+            $directory = dirname($path);
+            if (!Storage::disk('public')->exists($directory)) {
+                Storage::disk('public')->makeDirectory($directory, 0775, true);
+            }
+            // Save the image
+            Storage::disk('public')->put($path, $imageData);
             $HouseOwnerData['royaltyPhoto'] = $path;
         }
-
         HouseOwner::create($HouseOwnerData);
         if (!isset($HouseOwnerData['royaltyPhoto'])) {
-            return response()->json(['message' => 'تم التسجيل بنجاح، سيتم التواصل معك لقبول حسابك', 'isRegistered' => true,], 201);
+            return response()->json(['message' => 'تم إنشاء الحساب بنجاح، سيتم التواصل معك لقبول حسابك', 'isRegistered' => true,], 201);
         } else {
-            return response()->json(['message' => 'تم التسجيل بنجاح، يرجى الانتظار لقبول الادمن حسابك', 'isRegistered' => true,], 201);
+            return response()->json(['message' => 'تم إنشاء الحساب بنجاح، يرجى الانتظار لقبول الادمن حسابك', 'isRegistered' => true,], 201);
         }
     }
     public function login(LoginRequest $request)

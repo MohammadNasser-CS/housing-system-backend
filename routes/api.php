@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AcceptHouseOwner;
+use App\Http\Controllers\HouseOwner\AddHouse;
+use App\Http\Controllers\HouseOwner\HomePageHouseOwner;
+use App\Http\Controllers\HouseOwner\HouseDetails;
+use App\Http\Controllers\HouseOwner\RequestPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shared\AuthintcationController;

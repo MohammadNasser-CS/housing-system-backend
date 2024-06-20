@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HouseDetails extends Controller
 {
-    public function gethouseDetails($houseId)
+    public function getOwnerHouseDetails($houseId)
     {
         $house = House::find($houseId);
         if (!$house) {
@@ -75,7 +75,7 @@ class HouseDetails extends Controller
                 }
             }
         }
-        $houseData['reservationData'] = $reservationData == null ? 'لا يوجد طلاب حاجزين' : $reservationData;
+        $houseData['reservationData'] = $reservationData == null ? 'لم يتم حجز أي غرفة حتى الآن' : $reservationData;
         $houseData['primaryRooms'] = $primaryRoomsData;
         $houseData['secondaryRooms'] = $secondaryRoomsData;
 

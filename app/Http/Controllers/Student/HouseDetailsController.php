@@ -27,7 +27,7 @@ class HouseDetailsController extends Controller
         $house = House::find($houseId);
 
         if (!$house) {
-            return response()->json(['message' => 'House not found'], 404);
+            return response()->json(['message' => 'لم يتم العثور على المنزل'], 404);
         }
 
         // The Details from House:

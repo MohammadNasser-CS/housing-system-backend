@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\StoreRoomRequest;
+use App\Http\Requests\StoreSeconderyRoomRequest;
 use App\Models\House;
 use App\Models\Room;
 use App\Models\PrimaryRoom;
@@ -32,7 +33,7 @@ class AddHouse extends Controller
         ]);
         return response()->json(['message' => 'تم إنشاء البيت بنجاح'], 201);
     }
-    public function AddRoom(StoreRoomRequest $request)
+    public function addNewRoom(StoreRoomRequest $request)
     {
         $room = Room::create([
             'houseId' => $request['houseId'],
@@ -76,6 +77,35 @@ class AddHouse extends Controller
                 'photoUrl' => $path,
             ]);
         }
+        return response()->json(['message' => 'تم إضافة الغرفة بنجاح'], 201);
+    }
+    public function addSeconderyRoom(StoreSeconderyRoomRequest $request){
+        $room = Room::create([
+            'houseId' => $request['houseId'],
+            'roomType' => $request['roomType'],
+        ]);
+        $imageData = base64_decode($request['base64Image']);
+            if ($imageData === false) {
+                return response()->json(['message' => 'Invalid base64 format'], 400);
+            }
+            $uniqueId = Str::uuid()->toString(); // ID for PhotoRoom
+            $imageExtension = $request['imageExtension'];
+            $ownerName = Auth::user()->name;
+            $nameFile = str_replace(' ', '_', $ownerName);
+            // Photo path in storage :
+            $path = 'photos/' . $nameFile . '/houses/house' . $request['houseId'] . '/SeconderyRoom/room' . $room->id . '/photo' . $uniqueId . '.' . $imageExtension;
+            // Create the directory if it doesn't exist
+            $directory = dirname($path);
+            if (!Storage::disk('public')->exists($directory)) {
+                Storage::disk('public')->makeDirectory($directory, 0775, true);
+            }
+            // Save the image
+            Storage::disk('public')->put($path, $imageData);
+
+        RoomPhoto::create([
+            'roomId' => $room->id,
+            'photoUrl' => $path,
+        ]);
         return response()->json(['message' => 'تم إضافة الغرفة بنجاح'], 201);
     }
 }

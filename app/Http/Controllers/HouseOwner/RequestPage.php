@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RequestPage extends Controller
 {
-    public function HouseOwnerRequests()
+    public function houseOwnerRequests()
     {
         $houseOwnerId = Auth::id();
         $reservationRequests = ReservationRequest::where('houseOwnerId', $houseOwnerId)
@@ -33,7 +33,7 @@ class RequestPage extends Controller
         }
         return response()->json($Data);
     }
-    public function RejectRequestHouseOwenr($RequestId)
+    public function rejectRequestHouseOwenr($RequestId)
     {
         $reservationRequest = ReservationRequest::where('id', $RequestId)->first();
         if ($reservationRequest) {

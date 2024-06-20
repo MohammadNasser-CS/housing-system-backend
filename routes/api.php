@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth:sanctum', 'Student']], function () {
     // My requests details view :
     Route::get('/getReservationRoomRequest', [MyRoom::class, 'getReservationRoomRequest']); // ✅
     // My reservation room :
-    Route::get('/getMyReservationRoom', [MyRoom::class, 'getMyReservationRoom']);// ✅
+    Route::get('/getMyReservationRoom', [MyRoom::class, 'getMyReservationRoom']); // ✅
     // delete requests :
     Route::delete('/cancelRequest/{requestId}', [MyRoom::class, 'cancelRequest']); // ✅
 });
@@ -73,17 +73,21 @@ Route::group(['middleware' => 'HouseOwner'], function () {
     // Search Field in Main page of HouseOwner :
     Route::get('/searchHouse/{houseId}', [HomePageHouseOwner::class, 'searchHouse']); // ✅
 
+    // House Details in HouseOwner :
+    Route::get('/getOwnerHouseDetails/{houseId}', [HouseDetails::class, 'getOwnerHouseDetails']);
+
+    // Add Room :
+    Route::post('/addNewRoom', [AddHouse::class, 'addNewRoom']);  // ✅
+    //Add Secondary Room :
+    Route::post('/addSeconderyRoom', [AddHouse::class, 'addSeconderyRoom']);  // ✅
     // view HouseOwner Request
-    Route::get('/HouseOwnerRequests', [RequestPage::class, 'HouseOwnerRequests']);
+    Route::get('/houseOwnerRequests', [RequestPage::class, 'houseOwnerRequests']);
     // delete request :
-    Route::delete('/RejectRequestHouseOwenr/{requestId}', [RequestPage::class, 'RejectRequestHouseOwenr']);
+    Route::delete('/rejectRequestHouseOwenr/{requestId}', [RequestPage::class, 'rejectRequestHouseOwenr']);
     //confirmAppointment
     Route::put('/confirmAppointment/{requestId}', [RequestPage::class, 'confirmAppointment']);
-    // Add Room :
-    Route::post('/AddRoom', [AddHouse::class, 'AddRoom']);
 
-    // House Details in HouseOwner :
-    Route::get('/gethouseDetails/{houseId}', [HouseDetails::class, 'gethouseDetails']);
+
     // House Details in HouseOwner :
     Route::get('/getroomDetails/{roomId}', [HouseDetails::class, 'getroomDetails']);
 });
@@ -95,7 +99,6 @@ Route::group(['middleware' => 'Admin'], function () {
     Route::put('/acceptHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'acceptHouseOwner']);
     // reject the house owner
     Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']);
-
 });
 
 Route::post('/store', [ImageController::class, 'store']);

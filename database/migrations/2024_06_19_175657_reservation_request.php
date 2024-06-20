@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('houseOwnerId')->constrained('users')->onDelete('cascade');
             $table->foreignId('studentId')->constrained('users')->onDelete('cascade');
+            $table->foreignId('timeSlotId')->constrained('available_times')->onDelete('cascade');
             $table->enum('requestStatus', array_values(RequestStatusEnum::MAP));
             $table->string('meetingDetails');
             $table->foreignId('roomId')->constrained('rooms')->onDelete('cascade');

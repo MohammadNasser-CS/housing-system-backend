@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Student;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ use App\Models\ReservationRequest;
 
 class MyRoom extends Controller
 {
-    public function myReservationRoom()
+    public function getMyReservationRoom()
     {
         $currentStudentId = Auth::id();
         $reservation = Reservation::where('userId', $currentStudentId)->first();
@@ -21,49 +22,60 @@ class MyRoom extends Controller
             $user = $house->users;
             $roomPhoto = RoomPhoto::where('roomId', $room->id)->first();
             $price = $room->primaryRooms->price;
+            $availableBeds = $room->primaryRooms->bedNumber - $room->primaryRooms->bedNumberBooked;
             $price = $reservation->reservationType == 'تخت' ? $price / 2 : $price;
             $price = strval($price);
-
-            return response()->json([
+            $myRoom = [
                 'reservationType' => $reservation->reservationType,
                 'reservationEnd' => $reservation->reservationEnd,
                 'houseOwnerName' => $user->name,
                 'houseOwnerPhone' => $user->phoneNumber,
                 'roomPhoto' => url('storage/' . $roomPhoto->photoUrl),
                 'price' => strval($price),
+                'roomSpace' => $room->primaryRooms->roomSpace,
+                'availableBeds' =>(String) $availableBeds,
+                'hasBalcony' => $room->primaryRooms->balcony,
+                'hasDesk' => $room->primaryRooms->desk,
+                'hasAc' => $room->primaryRooms->ac,
+            ];
+            return response()->json([
+                'myRoom' => $myRoom,
             ]);
         } else {
             return response()->json([
+                'myRoom' => null,
                 'message' => 'لا يوجد',
             ]);
         }
     }
-    public function RequestPageStudent()
+    public function getReservationRoomRequest()
     {
         $currentStudentId = Auth::id();
         $reservationRequests = ReservationRequest::where('studentId', $currentStudentId)->get();
         if ($reservationRequests->isEmpty()) {
-            return response()->json(['message' => 'لا يوجد']);
+            return response()->json(['requests' => null, 'message' => 'لا يوجد']);
         }
         $responseData = [];
         foreach ($reservationRequests as $request) {
             $responseData[] = [
-                'RequestId' => $request->id,
+                'requestId' => (string) $request->id,
                 'requestStatus' => $request->requestStatus,
-                'meetingDetails' => $request->meetingDetails,
-                'roomId' => $request->roomId,
-                'houseId' => $request->rooms->houseId,
+                'selectedDateTimeSlot' => $request->meetingDetails,
+                'roomId' => (string) $request->roomId,
+                'houseId' => (string) $request->rooms->houseId,
                 'houseOwnerName' => $request->HouseOwner->name,
                 'houseOwnerPhoneNumber' => $request->HouseOwner->phoneNumber,
             ];
         }
-        return response()->json($responseData);
+        return response()->json(['requests' => $responseData]);
     }
-    public function deleteRequest($RequestId)
+    public function cancelRequest($requestId)
     {
-        $currentStudentId = Auth::id();
-        $request = ReservationRequest::where('id', $RequestId)->where('studentId', $currentStudentId)->first();
-        $request->delete();
-        return response()->json(['message' => 'تم الحذف بنجاح ']);
+        $request = ReservationRequest::where('id', $requestId)->first();
+        if ($request) {
+            $request->delete();
+            return response()->json(['message' => 'تم الحذف بنجاح ']);
+        }
+        return response()->json(['message' => 'لا يوجد طلب في هذا الرقم']);
     }
 }

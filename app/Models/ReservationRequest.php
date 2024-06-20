@@ -9,6 +9,15 @@ class ReservationRequest extends Model
 {
     use HasFactory;
     protected $guarded =[];
+    protected $fillable = [
+        'houseOwnerId',
+        'meetingDetails',
+        // other columns...
+    ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
     public function Student()
     {
         return $this->belongsTo(User::class , 'studentId');

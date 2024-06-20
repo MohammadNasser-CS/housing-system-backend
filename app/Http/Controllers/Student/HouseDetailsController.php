@@ -93,7 +93,7 @@ class HouseDetailsController extends Controller
         // Get the Details for room With picture .
         $Room = Room::find($roomId);
         $primaryRoom = $Room->primaryRooms;
-        $roomPhotos = $Room->roomPhotos->pluck('photoUrl');
+        $roomPhotos = $Room->roomPhotos->pluck('photoUrl')->take(3);
         $roomPhotos = $roomPhotos->map(function ($photoUrl) {
             return url('storage/' . $photoUrl);
         });
@@ -103,7 +103,6 @@ class HouseDetailsController extends Controller
         $availableTimes = AvailableTimes::where('houseOwnerId', $houseOwner->id)
             ->where('status', FlagEnum::no->value)->select('id as slotId', 'timeSlot')
             ->get();
-
         $data = [
             'avalabileBed' => $primaryRoom->bedNumber - $primaryRoom->bedNumberBooked,
             'roomSpace' => $primaryRoom->roomSpace,
@@ -124,33 +123,42 @@ class HouseDetailsController extends Controller
         // Room Id :
         $roomId = $request->input('roomId');
         //  meetingDetails ( Day & time ) :
-        $meetingDetails = $request->input('timeSlotId');
+        $timeSlotId = (int)$request->input('timeSlotId');
         // houseOwner Id :
-
         $room = Room::find($roomId);
         $houseOwnerId = $room->houses->userId;
-        return response()->json(['result' => $meetingDetails,'res2'=>  $houseOwnerId]);
-        $timeSlot = AvailableTimes::where('houseOwnerId',  $houseOwnerId)->where('id', $request->input('timeSlotId'))->first();
-        if ($timeSlot == null) {
-            return response()->json(['result' => 'هذا غير متاح لصاحب السكن']);
-        } else  if ($timeSlot->status == FlagEnum::yes->value) {
-            return response()->json(['result' => 'هذا الموعد محجوز لشخص آخر']);
-        }
-        $existingRequest = ReservationRequest::where('studentId', $currentStudentId)->where('roomId', $roomId)->first();
 
+        $meetingDetails = AvailableTimes::where('id', $timeSlotId)
+            ->first();
+
+        if ($meetingDetails == null) {
+            return response()->json(['error' => 'هذا غير متاح لصاحب السكن']);
+        } else  if ($meetingDetails->status == FlagEnum::yes->value) {
+            return response()->json(['error' => 'هذا الموعد محجوز لشخص آخر']);
+        }
+
+        $existingRequest = ReservationRequest::where('studentId', $currentStudentId)
+            ->where('roomId', $roomId)
+            ->where('requestStatus', RequestStatusEnum::waiting->value)
+            ->first();
         if ($existingRequest) {
             return response()->json(['error' => 'تم بالفعل إرسال طلب الحجز لهذه الغرفة'], 400);
         }
-
+        $existingTime = ReservationRequest::where('studentId', $currentStudentId)
+            ->where('requestStatus', RequestStatusEnum::waiting->value)
+            ->first();
+        if ($existingTime) {
+            return response()->json(['error' => 'يوجد لك حجز في هذا الوقت في غرفة اخرى'], 400);
+        }
+        $meetingDetails->status = FlagEnum::yes->value;
         $reservationRequest = new ReservationRequest();
         $reservationRequest->studentId = $currentStudentId;
         $reservationRequest->roomId = $roomId;
-        $reservationRequest->meetingDetails = $timeSlot->timeSlot;
+        $reservationRequest->timeSlotId = $timeSlotId;
+        $reservationRequest->meetingDetails = $meetingDetails->timeSlot;
         $reservationRequest->houseOwnerId = $houseOwnerId;
         $reservationRequest->requestStatus = RequestStatusEnum::waiting->value;
-
-
         $reservationRequest->save();
-        return response()->json(['message' => 'تم حجز الطلب']);
+        return response()->json(['result' => $reservationRequest, 'message' => 'تم حجز الطلب']);
     }
 }

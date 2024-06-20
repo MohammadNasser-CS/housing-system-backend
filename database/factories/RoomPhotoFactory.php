@@ -21,7 +21,7 @@ class RoomPhotoFactory extends Factory
     {
         return [
             'roomId' => Room::factory(),
-            'photoUrl' => $this->faker->randomElement(['storage/primartRoomsImages/room1.jpg','storage/primartRoomsImages/room2.jpg','storage/primartRoomsImages/room3.jpg']),
+            'photoUrl' => $this->faker->randomElement(['primartRoomsImages/room1.jpg','primartRoomsImages/room2.jpg','primartRoomsImages/room3.jpg']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

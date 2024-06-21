@@ -75,7 +75,11 @@ class HouseDetails extends Controller
                 }
             }
         }
-        $houseData['reservationData'] = $reservationData == null ? 'لم يتم حجز أي غرفة حتى الآن' : $reservationData;
+        if ($reservationData === null || empty($reservationData)) {
+            $houseData['reservationData'] = null;
+        } else {
+            $houseData['reservationData'] = $reservationData;
+        }
         $houseData['primaryRooms'] = $primaryRoomsData;
         $houseData['secondaryRooms'] = $secondaryRoomsData;
 

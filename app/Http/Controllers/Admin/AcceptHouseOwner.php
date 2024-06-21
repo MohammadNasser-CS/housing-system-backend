@@ -11,7 +11,7 @@ use App\Enum\UserRoleEnum;
 
 class AcceptHouseOwner extends Controller
 {
-    public function getHouseOwnerRequest()
+    public function getHouseOwnerActiviationRequest()
     {
         $houseOwners = User::where('role', UserRoleEnum::OWNER->value)
             ->where('accountStatus', AccountStatusEnum::notActive->value)
@@ -23,8 +23,9 @@ class AcceptHouseOwner extends Controller
                 $RoyaltyPhotoPath = HouseOwner::where('userId', $houseOwner->id)
                     ->pluck('royaltyPhoto')
                     ->first();
+
                 $ownerData = [
-                    'ownerId' => $houseOwner->id,
+                    'ownerId' => (string)$houseOwner->id,
                     'name' => $houseOwner->name,
                     'phoneNumber' => $houseOwner->phoneNumber,
                 ];
@@ -35,7 +36,7 @@ class AcceptHouseOwner extends Controller
                 }
                 $Data[] = $ownerData;
             }
-            return response()->json(['houseOwners' => $Data], 200);
+            return response()->json(['houseOwnersRequests' => $Data], 200);
         } else {
             return response()->json(['message' => 'لا يوجد طلبات'], 401);
         }

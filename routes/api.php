@@ -74,18 +74,18 @@ Route::group(['middleware' => 'HouseOwner'], function () {
     Route::get('/searchHouse/{houseId}', [HomePageHouseOwner::class, 'searchHouse']); // ✅
 
     // House Details in HouseOwner :
-    Route::get('/getOwnerHouseDetails/{houseId}', [HouseDetails::class, 'getOwnerHouseDetails']);
+    Route::get('/getOwnerHouseDetails/{houseId}', [HouseDetails::class, 'getOwnerHouseDetails']); // ✅
 
     // Add Room :
     Route::post('/addNewRoom', [AddHouse::class, 'addNewRoom']);  // ✅
     //Add Secondary Room :
     Route::post('/addSeconderyRoom', [AddHouse::class, 'addSeconderyRoom']);  // ✅
     // view HouseOwner Request
-    Route::get('/houseOwnerRequests', [RequestPage::class, 'houseOwnerRequests']);
+    Route::get('/getHouseOwnerRequests', [RequestPage::class, 'getHouseOwnerRequests']); // ✅
     // delete request :
-    Route::delete('/rejectRequestHouseOwenr/{requestId}', [RequestPage::class, 'rejectRequestHouseOwenr']);
+    Route::delete('/rejectRequestHouseOwenr/{requestId}', [RequestPage::class, 'rejectRequestHouseOwenr']); // ✅
     //confirmAppointment
-    Route::put('/confirmAppointment/{requestId}', [RequestPage::class, 'confirmAppointment']);
+    Route::put('/confirmAppointment/{requestId}', [RequestPage::class, 'confirmAppointment']); // ✅
 
 
     // House Details in HouseOwner :
@@ -94,11 +94,11 @@ Route::group(['middleware' => 'HouseOwner'], function () {
 
 Route::group(['middleware' => 'Admin'], function () {
     // get all request register from houseOwner :
-    Route::get('/getHouseOwnerRequest', [AcceptHouseOwner::class, 'getHouseOwnerRequest']);
+    Route::get('/getHouseOwnerActiviationRequest', [AcceptHouseOwner::class, 'getHouseOwnerActiviationRequest']); // ✅
     // Accpet the house owner
-    Route::put('/acceptHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'acceptHouseOwner']);
+    Route::put('/acceptHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'acceptHouseOwner']); // ✅
     // reject the house owner
-    Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']);
+    Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']); // ✅
 });
 
 Route::post('/store', [ImageController::class, 'store']);

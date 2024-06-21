@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RequestPage extends Controller
 {
-    public function houseOwnerRequests()
+    public function getHouseOwnerRequests()
     {
         $houseOwnerId = Auth::id();
         $reservationRequests = ReservationRequest::where('houseOwnerId', $houseOwnerId)
@@ -19,19 +19,19 @@ class RequestPage extends Controller
         if ($reservationRequests->isEmpty()) {
             return response()->json(['message' => 'لا يوجد']);
         }
-        $Data = [];
+        $data = [];
         foreach ($reservationRequests as $request) {
-            $Data[] = [
-                'RequestId' => $request->id,
+            $data[] = [
+                'requestId' => (string) $request->id,
                 'requestStatus' => $request->requestStatus,
-                'meetingDetails' => $request->meetingDetails,
+                'selectedDateTimeSlot' => $request->meetingDetails,
                 'roomId' => "$request->roomId",
                 'houseId' => (string)$request->rooms->houseId,
-                'ownerName' => $request->Student->name,
-                'ownerPhoneNumber' => $request->Student->phoneNumber,
+                'studentName' => $request->Student->name,
+                'studentPhoneNumber' => $request->Student->phoneNumber,
             ];
         }
-        return response()->json($Data);
+        return response()->json(['requests' => $data]);
     }
     public function rejectRequestHouseOwenr($RequestId)
     {

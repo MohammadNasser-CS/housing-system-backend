@@ -57,6 +57,7 @@ class HouseDetails extends Controller
                         if ($user) {
                             $reservationData[] = [
                                 'roomId' => (string) $room->id,
+                                'studentId' => (string) $user->id,
                                 'studentName' => $user->name,
                                 'phoneNumber' => $user->phoneNumber,
                                 'reservationEnd' => $reservation->reservationEnd,

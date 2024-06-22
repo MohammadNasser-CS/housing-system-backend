@@ -5,6 +5,7 @@ use App\Http\Controllers\HouseOwner\AddHouse;
 use App\Http\Controllers\HouseOwner\HomePageHouseOwner;
 use App\Http\Controllers\HouseOwner\HouseDetails;
 use App\Http\Controllers\HouseOwner\RequestPage;
+use App\Http\Controllers\HouseOwner\ReservationDetailsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shared\AuthintcationController;
@@ -12,10 +13,8 @@ use App\Http\Controllers\Shared\NotifiactionController;
 use App\Http\Controllers\Student\HomePageStudentController;
 use App\Http\Controllers\Student\FavoriteController;
 use App\Http\Controllers\Student\HouseDetailsController;
-use App\Http\Controllers\Student\Recommender;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\MyInformationController;
-use App\Http\Controllers\ImageController;
 use App\Http\Controllers\Student\MyRoom;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -87,6 +86,12 @@ Route::group(['middleware' => 'HouseOwner'], function () {
     //confirmAppointment
     Route::put('/confirmAppointment/{requestId}', [RequestPage::class, 'confirmAppointment']); // ✅
 
+    //Accept Reservation :
+    Route::post('/acceptRoomReservationRequest', [ReservationDetailsController::class, 'acceptRoomReservationRequest']); // ✅
+    //Update Reservation :
+    Route::put('/updateRoomReservation', [ReservationDetailsController::class, 'updateRoomReservation']); // ✅
+    // delete Reservation :
+    Route::delete('/finishRoomReservation/{studentId}', [ReservationDetailsController::class, 'finishRoomReservation']);
 
     // House Details in HouseOwner :
     Route::get('/getroomDetails/{roomId}', [HouseDetails::class, 'getroomDetails']);
@@ -101,4 +106,3 @@ Route::group(['middleware' => 'Admin'], function () {
     Route::delete('/rejectHouseOwner/{ownerId}', [AcceptHouseOwner::class, 'rejectHouseOwner']); // ✅
 });
 
-Route::post('/store', [ImageController::class, 'store']);
